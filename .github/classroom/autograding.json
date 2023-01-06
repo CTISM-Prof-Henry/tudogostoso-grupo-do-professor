@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "test_frontend",
+      "setup": "sudo -H pip3 install --requirement tester_requirements.txt",
+      "run": "python test_frontend.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 5,
+      "points": null
+    },
+    {
+      "name": "test_database",
+      "setup": "sudo -H pip3 install --requirement tester_requirements.txt",
+      "run": "python test_database.py",
+      "input": "",
+      "output": "",
+      "comparison": "included",
+      "timeout": 5,
+      "points": null
+    }
+  ]
+}
