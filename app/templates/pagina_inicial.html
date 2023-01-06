@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- para o frontend, faça assim -->
+    <link rel="shortcut icon" href="../static/img/favicon.ico">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <!-- para o backend, faça assim -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>Minha primeira aplicação Flask</title>
+</head>
+<body>
+
+<div class="center white-background">
+    <h1 class="center">Minha primeira<br/>aplicação Flask</h1>
+
+    <p>
+        Esta é a sua primeira aplicação Flask. Este site é construído de maneira que
+        seja o mais didático possível.
+    </p>
+    <p>
+        Existem duas páginas de exemplo: uma em que todo o HTML da página Web é gerado pelo
+        servidor, e outra em que uma tabela é gerada por AJAX (o HTML está pré-renderizado,
+        e só a tabela é atualizada).
+    </p>
+    <p>
+        Clique nos botões abaixo para ver o comportamento destas duas páginas. Depois,
+        investigue o código-fonte para ver como estão implementadas.
+    </p>
+
+    <ul class="no-marker">
+        <!-- nota: os links abaixo só funcionarão quando o backend estiver funcionando, pois eles referenciam ROTAS,
+             e não páginas HTML! -->
+        <li class="no-marker"><a href="{{ url_for('server_generated_page') }}">Página gerada pelo servidor</a></li>
+        <li class="no-marker"><a href="{{ url_for('ajax_generated_table') }}">Tabela gerada por AJAX</a></li>
+        <!-- começo do trecho de código gerado pelo servidor -->
+        {% autoescape false %}
+        {{ lista_materias }}
+        {% endautoescape %}
+        <!-- fim do trecho de código gerado pelo servidor -->
+    </ul>
+
+    <!-- começo do trecho de código gerado pelo servidor -->
+    {% autoescape false %}
+    {{ shia }}
+    {% endautoescape %}
+    <!-- fim do trecho de código gerado pelo servidor -->
+
+</div>
+</body>
+</html>

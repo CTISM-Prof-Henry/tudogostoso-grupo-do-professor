@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- para o frontend, faça assim -->
+    <link rel="shortcut icon" href="../static/img/favicon.ico">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <!-- para o backend, faça assim -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>Tabela gerada por AJAX</title>
+</head>
+<body>
+
+<div class="center white-background">
+    <h1 class="center">Tabela gerada por AJAX</h1>
+
+    <p>
+        Aperte o botão abaixo para gerar uma tabela. A tabela abaixo foi gerada pelo AJAX. Ela contém dados que estão
+        presentes no banco de dados deste site.
+    </p>
+    <label for="select_tables"></label>
+    <select name="select_tables" id="select_tables">
+        <option value="professores">Professores</option>
+        <option value="materias">Matérias</option>
+        <option value="professores_para_materias">Professores para Matérias</option>
+    </select>
+    <button id="button_generate_table">Clique aqui!</button>
+    <button id="alerta" onclick="alerta_vermelho()">Alerta</button>
+
+    <table id="answer_table">
+    </table>
+
+</div>
+</body>
+<!-- precisa usar isso para o AJAX funcionar! -->
+<script
+	src="https://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous">
+</script>
+<!-- para o frontend, faça assim -->
+<script type="application/javascript" src="../static/js/main.js"></script>
+<!-- para o backend, faça assim -->
+<script type="application/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- código AJAX -->
+<script type="application/javascript">
+    $("#button_generate_table").on("click", function(event) {
+    event.preventDefault(); // o usuário precisa selecionar um valor diferente do default, senão não envia a requisição
+
+    $.ajax({
+        method: "POST",
+        url: "{{ url_for('generate_table') }}", // deve ser o mesmo nome do método definido no servidor
+        // envia uma variável de nome opcao_selecionada para os servidor
+        // essa variável tem o mesmo valor do elemento HTML select_tables (definido ali em cima no código)
+        data: {opcao_selecionada: $("#select_tables").val()},
+        success: function(responseData) {
+            // função que constrói uma tabela, usando código Javascript, baseado em um dicionário enviado pelo servidor
+            let res = JSON.stringify(responseData);
+            console.log('o servidor respondeu o seguinte: ');
+            console.log(res);
+
+			let response = eval(responseData);
+			let table = document.createElement('table');
+
+			for(let i = 0; i < response.length; i++) {
+				// constrói o cabeçalho
+				if(i === 0) {
+					let tr = table.insertRow();
+					for(let key in response[i]) {
+						let td = tr.insertCell();
+						let bold = document.createElement('strong');
+						let some_node = document.createTextNode(key);
+						bold.appendChild(some_node);
+						td.appendChild(bold);
+					}
+				}
+				// constrói o resto
+				let tr = table.insertRow();
+				for(let key in response[i]) {
+					let td = tr.insertCell();
+					td.appendChild(document.createTextNode(response[i][key]));
+				}
+			}
+            // define que o código HTML do elemento answer_table é o definido por essa função
+			$('#answer_table').html(table);
+        }
+    });
+});
+<!-- código AJAX -->
+</script>
+</html>

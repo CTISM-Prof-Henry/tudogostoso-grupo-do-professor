@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- para o frontend, faça assim -->
+    <link rel="shortcut icon" href="../static/img/favicon.ico">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <!-- para o backend, faça assim -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>Página não encontrada!</title>
+</head>
+<body>
+
+<div class="center white-background">
+    <h1 class="center">Página não encontrada!</h1>
+    <br/>
+    <p class="center">Desculpe, mas não conseguimos encontrar a página que você solicitou!</p>
+    <br/>
+    <!-- a imagem abaixo só irá carregar quando o backend estiver executando -->
+    <img alt="ye sad" class="center" src="{{ url_for('static', filename='img/ye_sad.jpg') }}">
+</div>
+</body>
+</html>

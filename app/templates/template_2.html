@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- para o frontend, faça assim -->
+    <link rel="shortcut icon" href="../static/img/favicon.ico">
+    <link rel="stylesheet" href="../static/css/main.css">
+    <!-- para o backend, faça assim -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    <title>Página gerada por Servidor</title>
+</head>
+<body>
+
+<div class="center white-background">
+    <h1 class="center">Página gerada<br/>por Servidor</h1>
+    <div>
+        <!-- começo do trecho de código gerado pelo servidor -->
+        {% autoescape false %}
+        <br/>
+        {{ paragrafo }}
+        <br/>
+        {{ imagem }}
+        <br/>
+        {% endautoescape %}
+        <!-- fim do trecho de código gerado pelo servidor -->
+    </div>
+</div>
+</body>
+</html>

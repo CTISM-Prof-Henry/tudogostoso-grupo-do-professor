@@ -1,0 +1,3 @@
+pip
+flask==2.1.*
+sqlite==3.36.*
