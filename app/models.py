@@ -5,6 +5,7 @@ import flask
 from flask import request, jsonify
 
 from datetime import datetime as dt
+import random
 
 
 def data_para_string(data: dt) -> str:
@@ -66,6 +67,30 @@ def main(app: flask.app.Flask) -> flask.app.Flask:
             new_answer.append({k: v for k, v in zip(table_columns, line)})
         # monta a resposta
         response = jsonify(new_answer)
+        response.headers.add('Access-Control-Allow-Origin', '*')  # Essa linha é necessária. Requisição dos navegadores
+        return response  # retorna resposta para a página Web
+
+    @app.route('/calcular_frete', methods=['POST'])
+    def calcular_frete():
+        cep = request.form['cep']
+
+        if len(cep) == 9 and '-' in cep:
+            # calcula o frete
+            nums = cep.split('-')
+            for num in nums:
+                try:
+                    _ = int(num)
+                except:
+                    dicionario = {'valor': 'cep informado não confere!'}
+                else:
+                    valor = random.randint(10, 20)
+                    dicionario = {'valor': 'R$' + str(valor)}
+        else:
+            dicionario = {'valor': 'cep informado não confere!'}
+
+        # monta resposta; precisa enviar um dicionário
+        response = jsonify(dicionario)
+
         response.headers.add('Access-Control-Allow-Origin', '*')  # Essa linha é necessária. Requisição dos navegadores
         return response  # retorna resposta para a página Web
 

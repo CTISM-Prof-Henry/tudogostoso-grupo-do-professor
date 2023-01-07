@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     <title>Minha primeira aplicação Flask</title>
 </head>
-<body>
 
+<body>
 <div class="center white-background">
     <ul class="no-marker">
         <!-- nota: os links abaixo só funcionarão quando o backend estiver funcionando, pois eles referenciam ROTAS,
@@ -25,6 +25,45 @@
         {% endautoescape %}
         <!-- fim do trecho de código gerado pelo servidor -->
     </ul>
+
+    <label for="campo_frete">CEP: </label>
+    <input type="text" id="campo_frete">
+    <button id="calcular_frete">Calcular</button><br/>
+    <p id="valor_frete"></p>
+
 </div>
 </body>
+<!-- precisa usar isso para o AJAX funcionar! -->
+<script
+	src="https://code.jquery.com/jquery-3.3.1.min.js"
+	integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+	crossorigin="anonymous">
+</script>
+<!-- para o frontend, faça assim -->
+<script type="application/javascript" src="../static/js/main.js"></script>
+<!-- para o backend, faça assim -->
+<script type="application/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- código AJAX -->
+<script type="application/javascript">
+    $("#calcular_frete").on("click", function(event) {
+    event.preventDefault(); // o usuário precisa selecionar um valor diferente do default, senão não envia a requisição
+
+    $.ajax({
+        method: "POST",
+        url: "{{ url_for('calcular_frete') }}", // deve ser o mesmo nome do método definido no servidor
+        // envia uma variável de nome opcao_selecionada para os servidor
+        // essa variável tem o mesmo valor do elemento HTML select_tables (definido ali em cima no código)
+        data: {cep: $("#campo_frete").val()},
+        success: function(responseData) {
+            // função que constrói uma tabela, usando código Javascript, baseado em um dicionário enviado pelo servidor
+            document.getElementById('valor_frete').innerHTML = responseData['valor'];
+            // $('#answer_table').html(table);
+
+
+			//$('#answer_table').html(table);
+        }
+    });
+});
+<!-- código AJAX -->
+</script>
 </html>
