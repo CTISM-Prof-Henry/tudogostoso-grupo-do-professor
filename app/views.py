@@ -3,6 +3,7 @@ Arquivo com definições de roteamento para a aplicação.
 
 É uma boa prática de programação colocar o mesmo nome do roteamento, da função e do arquivo HTML.
 """
+import sqlite3
 
 import flask
 
@@ -19,63 +20,39 @@ def main(app: flask.app.Flask) -> flask.app.Flask:
 
     @app.route('/')
     def initial_page():
+        # eu quero recuperar a lista de memes que estão na tabela memes
+        results = query_function('''SELECT id, nome FROM memes;''')
+
+        # results =
+        # [
+        #   ('DJ André Marques manda AQUELE ao vivo', 'https://youtube.com/'),
+        #   ('Rei do Camarote', 'https://youtube.com/'
+        # ]
+
+        lista_materias = '<ul>'
+        for result in results:
+            lista_materias += '<li><a href="{1}">{0}</a></li>'.format(result[1], flask.url_for('memes', id_meme=result[0]))
+        lista_materias += '</ul>'
+
+        return flask.render_template(
+            'pagina_inicial.html',
+            lista_materias=lista_materias
+        )
+
+    @app.route('/memes/<id_meme>', methods=['GET'])
+    def memes(id_meme):
         try:
-            materias = query_function('''SELECT id_materia, nome FROM materias''')
-            texto_lista_materias = ''
-            for materia in materias:
-                id_materia = materia[0]
-                nome_materia = materia[1]
-                rota = 'materias/{0}'.format(id_materia)
-                texto_lista_materias += '<li class="no-marker"><a href="{0}">{1}</a></li>\n'.format(rota, nome_materia)
+            results = query_function('''SELECT nome, link FROM memes WHERE id = {0};'''.format(id_meme))
 
-            shia = '''
-            <div class="center">
-            <h2 class="center" style="width:100%">Shia está pistolaço com você >:(</h1>
-            <br/>
-            <iframe src="https://www.youtube.com/embed/Alt0SKEL84M"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen style="width: 100%;resize: horizontal;aspect-ratio: 16 / 9;">
-            </iframe>
-            </div>
-            '''
-
-            return flask.render_template('pagina_inicial.html', lista_materias=texto_lista_materias, shia=shia)
-        except Exception:
-            return flask.render_template(
-                '404.html'
-            )
-
-    @app.route('/materias/<id_materia>', methods=['GET'])
-    def materias(id_materia):
-        try:
-            nome_materia = query_function('''SELECT nome FROM materias WHERE id_materia = {0}'''.format(id_materia))[0][0]
-
-            texto_paragrafos = '<p class="center">Esta é a página da matéria <b>{0}!</b></p><br/>\n'.format(nome_materia)
-            texto_paragrafos += '<p class="center">Veja abaixo os professores que ministraram-na:</p><br/>\n'
-
-            professores = query_function('''
-                SELECT p.nome
-                FROM professores p
-                INNER JOIN professores_para_materias ppm on p.id_professor = ppm.id_professor
-                INNER JOIN materias m on ppm.id_materia = m.id_materia
-                WHERE m.id_materia = '{0}';
-            '''.format(id_materia))
-
-            texto_paragrafos += '<ul class="center">\n'
-            for prof in professores:
-                texto_paragrafos += '\t<li>{0}</li>\n'.format(prof[0])
-            texto_paragrafos += '</ul>'
+            # results = [(nome, link)]
 
             return flask.render_template(
-                'template_2.html',
-                paragrafo=texto_paragrafos,
-                imagem=''
+                'pagina_meme.html',
+                nome='<p>{0}</p>'.format(results[0][0]),
+                link='<p>{0}</p>'.format(results[0][1])
             )
-        except Exception:
-            return flask.render_template(
-                '404.html'
-            )
+        except:
+            return flask.render_template('404.html')
 
     @app.route('/server_generated_page', methods=['GET'])
     def server_generated_page():

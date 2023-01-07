@@ -9,19 +9,16 @@
     <!-- para o backend, faça assim -->
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-    <title>Minha primeira aplicação Flask</title>
+    <title>Memes</title>
 </head>
 <body>
 
 <div class="center white-background">
     <ul class="no-marker">
-        <!-- nota: os links abaixo só funcionarão quando o backend estiver funcionando, pois eles referenciam ROTAS,
-             e não páginas HTML! -->
-        <li class="no-marker"><a href="{{ url_for('server_generated_page') }}">Página gerada pelo servidor</a></li>
-        <li class="no-marker"><a href="{{ url_for('ajax_generated_table') }}">Tabela gerada por AJAX</a></li>
         <!-- começo do trecho de código gerado pelo servidor -->
         {% autoescape false %}
-        {{ lista_materias }}
+        {{ nome }}
+        {{ link }}
         {% endautoescape %}
         <!-- fim do trecho de código gerado pelo servidor -->
     </ul>
